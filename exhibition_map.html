@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>we all still feel the missing being — Exhibition Map</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #0a0a0a;
+    --off-black: #111;
+    --room-fill: #2a2a2a;
+    --room-stroke: #444;
+    --corridor: #1a1a1a;
+    --corridor-stroke: #333;
+    --text-primary: #e8e6e0;
+    --text-muted: #888;
+    --text-dim: #555;
+
+    --amber-fill: #3a2800;
+    --amber-stroke: #c8820a;
+    --amber-text: #f5c842;
+    --amber-sub: #c8820a;
+
+    --teal-fill: #002820;
+    --teal-stroke: #0d8060;
+    --teal-text: #4dd4a8;
+    --teal-sub: #0d8060;
+
+    --purple-fill: #1a1530;
+    --purple-stroke: #6b5ce7;
+    --purple-text: #b8aaff;
+    --purple-sub: #6b5ce7;
+
+    --coral-fill: #2a0e08;
+    --coral-stroke: #c44022;
+    --coral-text: #f4845a;
+    --coral-sub: #c44022;
+
+    --reception-fill: rgba(200, 130, 10, 0.15);
+    --reception-stroke: #c8820a;
+
+    --stair-fill: #1e1e1e;
+    --stair-stroke: #555;
+  }
+
+  html, body {
+    background: var(--black);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  header {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid #222;
+    padding-bottom: 1.5rem;
+  }
+
+  header h1 {
+    font-family: 'DM Mono', monospace;
+    font-weight: 300;
+    font-style: italic;
+    font-size: clamp(1.1rem, 4vw, 1.5rem);
+    color: var(--text-primary);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.25rem;
+  }
+
+  header p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .floor-section {
+    margin-bottom: 3rem;
+  }
+
+  .floor-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .floor-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #222;
+  }
+
+  .map-wrap {
+    background: #0d0d0d;
+    border: 1px solid #1e1e1e;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* room base */
+  .room { fill: var(--room-fill); stroke: var(--room-stroke); stroke-width: 0.5; }
+  .corridor { fill: var(--corridor); stroke: var(--corridor-stroke); stroke-width: 0.5; }
+
+  /* highlighted rooms */
+  .lang { fill: var(--amber-fill); stroke: var(--amber-stroke); stroke-width: 2; }
+  .tv-studio { fill: var(--teal-fill); stroke: var(--teal-stroke); stroke-width: 2; }
+  .acting { fill: var(--purple-fill); stroke: var(--purple-stroke); stroke-width: 2; }
+  .blackbox { fill: var(--coral-fill); stroke: var(--coral-stroke); stroke-width: 2; }
+  .reception-band { fill: var(--reception-fill); stroke: var(--reception-stroke); stroke-width: 1; stroke-dasharray: 5 3; }
+
+  /* staircase */
+  .stair { fill: #181818; stroke: #444; stroke-width: 0.8; }
+  .stair-hatch { stroke: #3a3a3a; stroke-width: 0.7; }
+
+  /* text */
+  .t-room { font-family: 'DM Mono', monospace; font-size: 9px; fill: #555; }
+  .t-label { font-family: 'DM Sans', monospace; font-size: 11px; font-weight: 500; }
+  .t-sub   { font-family: 'DM Mono', monospace; font-size: 9px; }
+  .t-stair { font-family: 'DM Mono', monospace; font-size: 7px; fill: #555; }
+  .t-corridor { font-family: 'DM Mono', monospace; font-size: 8px; fill: #444; letter-spacing: 0.1em; }
+  .t-reception { font-family: 'DM Mono', monospace; font-size: 8px; fill: var(--amber-sub); }
+
+  /* callout leaders */
+  .leader { stroke: #333; stroke-width: 0.5; stroke-dasharray: 3 3; fill: none; }
+  .leader-dot { fill: #555; }
+
+  /* event listings below map */
+  .events {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .event-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    background: #111;
+    border-radius: 4px;
+    border-left: 2px solid transparent;
+  }
+
+  .event-item.amber { border-left-color: var(--amber-stroke); }
+  .event-item.teal  { border-left-color: var(--teal-stroke); }
+  .event-item.purple{ border-left-color: var(--purple-stroke); }
+  .event-item.coral { border-left-color: var(--coral-stroke); }
+
+  .event-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;
+    flex-shrink: 0;
+  }
+  .amber .event-dot  { background: var(--amber-stroke); }
+  .teal  .event-dot  { background: var(--teal-stroke); }
+  .purple .event-dot { background: var(--purple-stroke); }
+  .coral .event-dot  { background: var(--coral-stroke); }
+
+  .event-info { flex: 1; }
+  .event-title {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-style: italic;
+  }
+  .event-artist {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'DM Mono', monospace;
+  }
+  .event-location {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+    margin-top: 2px;
+  }
+
+  .legend {
+    margin-top: 2.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #1e1e1e;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-muted);
+  }
+
+  .legend-swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .legend-stair {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    background: repeating-linear-gradient(
+      -45deg,
+      #3a3a3a,
+      #3a3a3a 1px,
+      #181818 1px,
+      #181818 4px
+    );
+    border: 1px solid #444;
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>we all still feel the missing being</h1>
+  <p>Hunter North Building · Exhibition Map · 4th &amp; 5th Floor</p>
+</header>
+
+<!-- ── 4TH FLOOR ── -->
+<section class="floor-section">
+  <div class="floor-label">4th floor</div>
+  <div class="map-wrap">
+    <svg viewBox="0 0 580 490" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hatch4" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="5" x2="5" y2="0" class="stair-hatch"/>
+        </pattern>
+      </defs>
+
+      <!-- Floor bg -->
+      <rect x="0" y="0" width="580" height="490" fill="#0d0d0d"/>
+
+      <!-- Elevator corridor -->
+      <rect x="0" y="200" width="480" height="46" class="corridor"/>
+      <text class="t-corridor" x="175" y="226" text-anchor="middle">— ELEVATORS —</text>
+
+      <!-- Neutral rooms left -->
+      <rect x="8" y="8" width="66" height="56" rx="3" class="room"/>
+      <text class="t-room" x="41" y="38" text-anchor="middle">401</text>
+      <rect x="8" y="70" width="66" height="124" rx="3" class="room"/>
+      <text class="t-room" x="41" y="134" text-anchor="middle">402</text>
+
+      <!-- Neutral rooms right -->
+      <rect x="416" y="8" width="80" height="76" rx="3" class="room"/>
+      <text class="t-room" x="456" y="48" text-anchor="middle">430</text>
+      <rect x="416" y="252" width="64" height="46" rx="3" class="room"/>
+      <text class="t-room" x="448" y="277" text-anchor="middle">433</text>
+      <rect x="416" y="304" width="64" height="44" rx="3" class="room"/>
+      <text class="t-room" x="448" y="328" text-anchor="middle">433B</text>
+      <rect x="416" y="354" width="64" height="38" rx="3" class="room"/>
+      <text class="t-room" x="448" y="375" text-anchor="middle">434</text>
+      <rect x="416" y="398" width="64" height="40" rx="3" class="room"/>
+      <text class="t-room" x="448" y="420" text-anchor="middle">435</text>
+
+      <!-- Center -->
+      <rect x="258" y="252" width="74" height="76" rx="3" class="room"/>
+      <text class="t-room" x="295" y="292" text-anchor="middle">466</text>
+      <rect x="8" y="280" width="90" height="74" rx="3" class="room"/>
+      <text class="t-room" x="53" y="319" text-anchor="middle">482</text>
+
+      <!-- Bottom rows -->
+      <rect x="106" y="360" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="133" y="384" text-anchor="middle">477</text>
+      <rect x="166" y="360" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="193" y="384" text-anchor="middle">475</text>
+      <rect x="226" y="360" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="253" y="384" text-anchor="middle">473</text>
+      <rect x="106" y="410" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="133" y="434" text-anchor="middle">476</text>
+      <rect x="166" y="410" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="193" y="434" text-anchor="middle">474</text>
+      <rect x="226" y="410" width="54" height="44" rx="3" class="room"/>
+      <text class="t-room" x="253" y="434" text-anchor="middle">472</text>
+      <rect x="68" y="410" width="34" height="74" rx="3" class="room"/>
+      <text class="t-room" x="85" y="450" text-anchor="middle">478</text>
+      <rect x="286" y="410" width="80" height="70" rx="3" class="room"/>
+      <text class="t-room" x="326" y="447" text-anchor="middle">470</text>
+
+      <!-- LANG AUDITORIUM highlighted -->
+      <rect x="106" y="8" width="196" height="148" rx="5" class="lang"/>
+      <text class="t-label" x="204" y="62" text-anchor="middle" fill="#f5c842">424</text>
+      <text class="t-label" x="204" y="80" text-anchor="middle" fill="#e0bd70">Lang Auditorium</text>
+      <text class="t-sub" x="204" y="98" text-anchor="middle" fill="#c8820a">Screenings</text>
+
+      <!-- Reception hallway -->
+      <rect x="106" y="193" width="372" height="12" rx="2" class="reception-band"/>
+      <text class="t-reception" x="292" y="202" text-anchor="middle">Hallway — Reception</text>
+
+      <!-- TV STUDIO highlighted -->
+      <rect x="368" y="252" width="44" height="140" rx="5" class="tv-studio"/>
+      <text class="t-label" x="390" y="306" text-anchor="middle" fill="#4dd4a8" font-size="10">436</text>
+      <text class="t-sub" x="390" y="320" text-anchor="middle" fill="#0d8060">TV Studio</text>
+      <text class="t-sub" x="390" y="334" text-anchor="middle" fill="#0d8060">bugs,</text>
+      <text class="t-sub" x="390" y="348" text-anchor="middle" fill="#0d8060">birds,</text>
+      <text class="t-sub" x="390" y="362" text-anchor="middle" fill="#0d8060">blue</text>
+
+      <!-- STAIRCASES 4th -->
+      <rect x="302" y="8" width="34" height="44" rx="2" class="stair" fill="url(#hatch4)"/>
+      <text class="t-stair" x="319" y="26" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="319" y="36" text-anchor="middle">A</text>
+
+      <rect x="88" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch4)"/>
+      <text class="t-stair" x="104" y="220" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="104" y="230" text-anchor="middle">B</text>
+
+      <rect x="310" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch4)"/>
+      <text class="t-stair" x="326" y="220" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="326" y="230" text-anchor="middle">C</text>
+
+      <rect x="8" y="360" width="50" height="34" rx="2" class="stair" fill="url(#hatch4)"/>
+      <text class="t-stair" x="33" y="378" text-anchor="middle">STAIR D</text>
+
+      <!-- Callout lines right side -->
+      <line x1="302" y1="82" x2="496" y2="82" class="leader"/>
+      <circle cx="302" cy="82" r="2" class="leader-dot"/>
+      <text x="500" y="78" font-family="'DM Mono',monospace" font-size="9" fill="#c8820a">Screenings</text>
+      <text x="500" y="90" font-family="'DM Mono',monospace" font-size="8" fill="#555">we all still feel…</text>
+
+      <line x1="478" y1="199" x2="496" y2="199" class="leader"/>
+      <circle cx="478" cy="199" r="2" class="leader-dot"/>
+      <text x="500" y="203" font-family="'DM Mono',monospace" font-size="9" fill="#c8820a">Reception</text>
+
+      <line x1="412" y1="322" x2="496" y2="322" class="leader"/>
+      <circle cx="412" cy="322" r="2" class="leader-dot"/>
+      <text x="500" y="318" font-family="'DM Mono',monospace" font-size="9" fill="#0d8060">bugs, birds, blue</text>
+      <text x="500" y="330" font-family="'DM Mono',monospace" font-size="8" fill="#555">Celeste Newcomb</text>
+    </svg>
+  </div>
+
+  <div class="events">
+    <div class="event-item amber">
+      <div class="event-dot"></div>
+      <div class="event-info">
+        <div class="event-title">we all still feel the missing being</div>
+        <div class="event-artist">Screenings</div>
+        <div class="event-location">424 Lang Auditorium · Hallway outside = Reception</div>
+      </div>
+    </div>
+    <div class="event-item teal">
+      <div class="event-dot"></div>
+      <div class="event-info">
+        <div class="event-title">bugs, birds, blue</div>
+        <div class="event-artist">Celeste Newcomb · installation</div>
+        <div class="event-location">436 TV Studio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── 5TH FLOOR ── -->
+<section class="floor-section">
+  <div class="floor-label">5th floor</div>
+  <div class="map-wrap">
+    <svg viewBox="0 0 580 510" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="hatch5" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+          <line x1="0" y1="5" x2="5" y2="0" class="stair-hatch"/>
+        </pattern>
+      </defs>
+
+      <rect x="0" y="0" width="580" height="510" fill="#0d0d0d"/>
+
+      <!-- Elevator corridor -->
+      <rect x="0" y="200" width="480" height="46" class="corridor"/>
+      <text class="t-corridor" x="175" y="226" text-anchor="middle">— ELEVATORS —</text>
+
+      <!-- Neutral rooms left column -->
+      <rect x="8" y="8" width="66" height="54" rx="3" class="room"/>
+      <text class="t-room" x="41" y="37" text-anchor="middle">502</text>
+      <rect x="8" y="68" width="66" height="80" rx="3" class="room"/>
+      <text class="t-room" x="41" y="110" text-anchor="middle">503</text>
+      <rect x="8" y="200" width="66" height="54" rx="3" class="room"/>
+      <text class="t-room" x="41" y="229" text-anchor="middle">504</text>
+      <rect x="8" y="260" width="66" height="54" rx="3" class="room"/>
+      <text class="t-room" x="41" y="289" text-anchor="middle">506</text>
+      <rect x="8" y="320" width="66" height="68" rx="3" class="room"/>
+      <text class="t-room" x="41" y="356" text-anchor="middle">507</text>
+
+      <!-- Top center rooms -->
+      <rect x="80" y="8" width="120" height="54" rx="3" class="room"/>
+      <text class="t-room" x="140" y="37" text-anchor="middle">500</text>
+      <rect x="80" y="68" width="55" height="48" rx="3" class="room"/>
+      <text class="t-room" x="107" y="94" text-anchor="middle">520</text>
+      <rect x="141" y="68" width="55" height="48" rx="3" class="room"/>
+      <text class="t-room" x="168" y="94" text-anchor="middle">525</text>
+      <rect x="202" y="68" width="48" height="48" rx="3" class="room"/>
+      <text class="t-room" x="226" y="94" text-anchor="middle">528</text>
+      <rect x="256" y="68" width="48" height="48" rx="3" class="room"/>
+      <text class="t-room" x="280" y="94" text-anchor="middle">529</text>
+
+      <!-- Top right 544 -->
+      <rect x="370" y="8" width="80" height="98" rx="3" class="room"/>
+      <text class="t-room" x="410" y="59" text-anchor="middle">544</text>
+
+      <!-- Left mid -->
+      <rect x="80" y="260" width="58" height="44" rx="3" class="room"/>
+      <text class="t-room" x="109" y="284" text-anchor="middle">515</text>
+      <rect x="80" y="310" width="36" height="44" rx="3" class="room"/>
+      <text class="t-room" x="98" y="334" text-anchor="middle">511</text>
+      <rect x="122" y="310" width="36" height="44" rx="3" class="room"/>
+      <text class="t-room" x="140" y="334" text-anchor="middle">512</text>
+
+      <!-- ACTING STUDIO highlighted -->
+      <rect x="80" y="122" width="240" height="126" rx="5" class="acting"/>
+      <text class="t-label" x="200" y="170" text-anchor="middle" fill="#b8aaff">537</text>
+      <text class="t-label" x="200" y="188" text-anchor="middle" fill="#a090e8">Acting Studio</text>
+      <text class="t-sub" x="200" y="206" text-anchor="middle" fill="#6b5ce7">Repeater — AK Hansen</text>
+
+      <!-- BLACK BOX highlighted -->
+      <rect x="164" y="364" width="240" height="136" rx="5" class="blackbox"/>
+      <text class="t-label" x="284" y="414" text-anchor="middle" fill="#f4845a">543</text>
+      <text class="t-label" x="284" y="432" text-anchor="middle" fill="#e0704a">Black Box</text>
+      <text class="t-sub" x="284" y="450" text-anchor="middle" fill="#c44022">Visual Memoir</text>
+      <text class="t-sub" x="284" y="464" text-anchor="middle" fill="#c44022">Carlos Morales</text>
+
+      <!-- STAIRCASES 5th -->
+      <rect x="302" y="8" width="34" height="44" rx="2" class="stair" fill="url(#hatch5)"/>
+      <text class="t-stair" x="319" y="26" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="319" y="36" text-anchor="middle">A</text>
+
+      <rect x="88" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch5)"/>
+      <text class="t-stair" x="104" y="220" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="104" y="230" text-anchor="middle">B</text>
+
+      <rect x="310" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch5)"/>
+      <text class="t-stair" x="326" y="220" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="326" y="230" text-anchor="middle">C</text>
+
+      <rect x="8" y="394" width="50" height="34" rx="2" class="stair" fill="url(#hatch5)"/>
+      <text class="t-stair" x="33" y="413" text-anchor="middle">STAIR D</text>
+
+      <rect x="456" y="360" width="44" height="50" rx="2" class="stair" fill="url(#hatch5)"/>
+      <text class="t-stair" x="478" y="380" text-anchor="middle">STAIR</text>
+      <text class="t-stair" x="478" y="390" text-anchor="middle">E</text>
+
+      <!-- Callout lines -->
+      <line x1="320" y1="172" x2="496" y2="172" class="leader"/>
+      <circle cx="320" cy="172" r="2" class="leader-dot"/>
+      <text x="500" y="168" font-family="'DM Mono',monospace" font-size="9" fill="#6b5ce7">Repeater</text>
+      <text x="500" y="180" font-family="'DM Mono',monospace" font-size="8" fill="#555">AK Hansen</text>
+
+      <line x1="404" y1="432" x2="496" y2="432" class="leader"/>
+      <circle cx="404" cy="432" r="2" class="leader-dot"/>
+      <text x="500" y="428" font-family="'DM Mono',monospace" font-size="9" fill="#c44022">Visual Memoir</text>
+      <text x="500" y="440" font-family="'DM Mono',monospace" font-size="8" fill="#555">Carlos Morales</text>
+    </svg>
+  </div>
+
+  <div class="events">
+    <div class="event-item purple">
+      <div class="event-dot"></div>
+      <div class="event-info">
+        <div class="event-title">Repeater</div>
+        <div class="event-artist">AK Hansen · installation</div>
+        <div class="event-location">537 Acting Studio, Hunter North</div>
+      </div>
+    </div>
+    <div class="event-item coral">
+      <div class="event-dot"></div>
+      <div class="event-info">
+        <div class="event-title">Visual Memoir</div>
+        <div class="event-artist">Carlos Morales · installation</div>
+        <div class="event-location">543 Black Box, Hunter North</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#3a2800;border:1.5px solid #c8820a;"></div>
+    Screenings / Reception
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#002820;border:1.5px solid #0d8060;"></div>
+    bugs, birds, blue
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#1a1530;border:1.5px solid #6b5ce7;"></div>
+    Repeater
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background:#2a0e08;border:1.5px solid #c44022;"></div>
+    Visual Memoir
+  </div>
+  <div class="legend-item">
+    <div class="legend-stair"></div>
+    Staircase
+  </div>
+</div>
+
+</body>
+</html>
