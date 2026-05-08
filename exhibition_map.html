@@ -3,525 +3,410 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>we all still feel the missing being — Exhibition Map</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<title>IMA MFA Thesis Show — Spring 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --black: #0a0a0a;
-    --off-black: #111;
-    --room-fill: #2a2a2a;
-    --room-stroke: #444;
-    --corridor: #1a1a1a;
-    --corridor-stroke: #333;
-    --text-primary: #e8e6e0;
-    --text-muted: #888;
-    --text-dim: #555;
-
-    --amber-fill: #3a2800;
-    --amber-stroke: #c8820a;
-    --amber-text: #f5c842;
-    --amber-sub: #c8820a;
-
-    --teal-fill: #002820;
-    --teal-stroke: #0d8060;
-    --teal-text: #4dd4a8;
-    --teal-sub: #0d8060;
-
-    --purple-fill: #1a1530;
-    --purple-stroke: #6b5ce7;
-    --purple-text: #b8aaff;
-    --purple-sub: #6b5ce7;
-
-    --coral-fill: #2a0e08;
-    --coral-stroke: #c44022;
-    --coral-text: #f4845a;
-    --coral-sub: #c44022;
-
-    --reception-fill: rgba(200, 130, 10, 0.15);
-    --reception-stroke: #c8820a;
-
-    --stair-fill: #1e1e1e;
-    --stair-stroke: #555;
-  }
-
   html, body {
-    background: var(--black);
-    color: var(--text-primary);
+    background: #000;
+    color: #d8d5ce;
     font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
   }
+  body { max-width: 700px; margin: 0 auto; padding: 2rem 1rem 4rem; }
 
-  body {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 2.5rem 1.5rem 4rem;
-  }
-
-  header {
-    margin-bottom: 2.5rem;
-    border-bottom: 1px solid #222;
-    padding-bottom: 1.5rem;
-  }
-
+  header { margin-bottom: 1.75rem; padding-bottom: 1rem; border-bottom: 1px solid #1e1e1e; }
   header h1 {
     font-family: 'DM Mono', monospace;
-    font-weight: 300;
-    font-style: italic;
-    font-size: clamp(1.1rem, 4vw, 1.5rem);
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
-    margin-bottom: 0.25rem;
+    font-weight: 300; font-style: italic;
+    font-size: clamp(1rem, 4vw, 1.35rem);
+    color: #e0ddd6; margin-bottom: 0.15rem;
   }
+  header p { font-family: 'DM Mono', monospace; font-size: 0.63rem; color: #3a3a3a; letter-spacing: 0.12em; text-transform: uppercase; }
 
-  header p {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .floor-section {
-    margin-bottom: 3rem;
-  }
-
+  .floor-section { margin-bottom: 2.5rem; }
   .floor-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
+    font-family: 'DM Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.18em; text-transform: uppercase; color: #444;
+    margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.6rem;
   }
+  .floor-label::after { content: ''; flex: 1; height: 1px; background: #1a1a1a; }
 
-  .floor-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #222;
-  }
+  .map-wrap { background: #000; border: 1px solid #181818; border-radius: 3px; overflow-x: auto; padding: 4px; }
+  svg { display: block; width: 100%; height: auto; }
 
-  .map-wrap {
-    background: #0d0d0d;
-    border: 1px solid #1e1e1e;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-  }
-
-  svg {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-
-  /* room base */
-  .room { fill: var(--room-fill); stroke: var(--room-stroke); stroke-width: 0.5; }
-  .corridor { fill: var(--corridor); stroke: var(--corridor-stroke); stroke-width: 0.5; }
-
-  /* highlighted rooms */
-  .lang { fill: var(--amber-fill); stroke: var(--amber-stroke); stroke-width: 2; }
-  .tv-studio { fill: var(--teal-fill); stroke: var(--teal-stroke); stroke-width: 2; }
-  .acting { fill: var(--purple-fill); stroke: var(--purple-stroke); stroke-width: 2; }
-  .blackbox { fill: var(--coral-fill); stroke: var(--coral-stroke); stroke-width: 2; }
-  .reception-band { fill: var(--reception-fill); stroke: var(--reception-stroke); stroke-width: 1; stroke-dasharray: 5 3; }
-
-  /* staircase */
-  .stair { fill: #181818; stroke: #444; stroke-width: 0.8; }
-  .stair-hatch { stroke: #3a3a3a; stroke-width: 0.7; }
-
-  /* text */
-  .t-room { font-family: 'DM Mono', monospace; font-size: 9px; fill: #555; }
-  .t-label { font-family: 'DM Sans', monospace; font-size: 11px; font-weight: 500; }
-  .t-sub   { font-family: 'DM Mono', monospace; font-size: 9px; }
-  .t-stair { font-family: 'DM Mono', monospace; font-size: 7px; fill: #555; }
-  .t-corridor { font-family: 'DM Mono', monospace; font-size: 8px; fill: #444; letter-spacing: 0.1em; }
-  .t-reception { font-family: 'DM Mono', monospace; font-size: 8px; fill: var(--amber-sub); }
-
-  /* callout leaders */
-  .leader { stroke: #333; stroke-width: 0.5; stroke-dasharray: 3 3; fill: none; }
-  .leader-dot { fill: #555; }
-
-  /* event listings below map */
-  .events {
-    margin-top: 1rem;
-    display: grid;
-    gap: 0.5rem;
-  }
-
-  .event-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.6rem 0.75rem;
-    background: #111;
-    border-radius: 4px;
+  .events { margin-top: 0.6rem; display: grid; gap: 0.35rem; }
+  .ev {
+    display: flex; align-items: flex-start; gap: 0.6rem;
+    padding: 0.45rem 0.65rem; background: #080808; border-radius: 3px;
     border-left: 2px solid transparent;
   }
-
-  .event-item.amber { border-left-color: var(--amber-stroke); }
-  .event-item.teal  { border-left-color: var(--teal-stroke); }
-  .event-item.purple{ border-left-color: var(--purple-stroke); }
-  .event-item.coral { border-left-color: var(--coral-stroke); }
-
-  .event-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 5px;
-    flex-shrink: 0;
-  }
-  .amber .event-dot  { background: var(--amber-stroke); }
-  .teal  .event-dot  { background: var(--teal-stroke); }
-  .purple .event-dot { background: var(--purple-stroke); }
-  .coral .event-dot  { background: var(--coral-stroke); }
-
-  .event-info { flex: 1; }
-  .event-title {
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--text-primary);
-    font-style: italic;
-  }
-  .event-artist {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-family: 'DM Mono', monospace;
-  }
-  .event-location {
-    font-size: 0.7rem;
-    color: var(--text-dim);
-    font-family: 'DM Mono', monospace;
-    margin-top: 2px;
-  }
+  .ev.am { border-left-color: #c8820a; }
+  .ev.te { border-left-color: #0d8060; }
+  .ev.pu { border-left-color: #6b5ce7; }
+  .ev.co { border-left-color: #c44022; }
+  .dot { width:6px; height:6px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .am .dot { background:#c8820a; } .te .dot { background:#0d8060; }
+  .pu .dot { background:#6b5ce7; } .co .dot { background:#c44022; }
+  .et { font-size:0.8rem; font-weight:500; color:#e0ddd6; font-style:italic; }
+  .ed { font-size:0.67rem; color:#484848; font-family:'DM Mono',monospace; margin-top:1px; }
 
   .legend {
-    margin-top: 2.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #1e1e1e;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
+    margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #1a1a1a;
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.2rem;
   }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.68rem;
-    color: var(--text-muted);
-  }
-
-  .legend-swatch {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    flex-shrink: 0;
-  }
-
-  .legend-stair {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    background: repeating-linear-gradient(
-      -45deg,
-      #3a3a3a,
-      #3a3a3a 1px,
-      #181818 1px,
-      #181818 4px
-    );
-    border: 1px solid #444;
-    flex-shrink: 0;
+  .li { display:flex; align-items:center; gap:0.35rem; font-family:'DM Mono',monospace; font-size:0.62rem; color:#3a3a3a; }
+  .ls { width:8px; height:8px; border-radius:1px; flex-shrink:0; }
+  .ls-st {
+    width:8px; height:8px; border-radius:1px; flex-shrink:0;
+    background: repeating-linear-gradient(-45deg,#2a2a2a,#2a2a2a 1px,#000 1px,#000 3px);
+    border:1px solid #3a3a3a;
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>we all still feel the missing being</h1>
-  <p>Hunter North Building · Exhibition Map · 4th &amp; 5th Floor</p>
+  <h1>IMA MFA Thesis Show — Spring 2026</h1>
+  <p>Hunter North · 69th St between Lexington &amp; Park</p>
 </header>
 
-<!-- ── 4TH FLOOR ── -->
+<!-- ══════════════════════ 4TH FLOOR ══════════════════════ -->
+<!--
+  Layout key (traced from original):
+  TOP ROW L→R: [402 cluster far-left] [gap/black] [424 Lang, large center-right] [small rooms right of Lang] [430 far-right corner] [432 tall far-right]
+  MIDDLE: elevator bank (X boxes) spanning ~40% of width, center-left
+  BOTTOM ROW: [left outer wall rooms] [482 large dark] [477A divider][477/475/473 row][476/474/472 row below] [466 center-right] [470 bottom-right-center] [436 TV Studio highlighted, bottom-right] [433/434/435 stack far-right]
+-->
 <section class="floor-section">
   <div class="floor-label">4th floor</div>
   <div class="map-wrap">
-    <svg viewBox="0 0 580 490" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="hatch4" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="5" x2="5" y2="0" class="stair-hatch"/>
-        </pattern>
-      </defs>
+  <svg viewBox="0 0 620 440" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="st" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="5" x2="5" y2="0" stroke="#2e2e2e" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="620" height="440" fill="#000"/>
 
-      <!-- Floor bg -->
-      <rect x="0" y="0" width="580" height="490" fill="#0d0d0d"/>
+    <!-- ── TOP HALF ── -->
 
-      <!-- Elevator corridor -->
-      <rect x="0" y="200" width="480" height="46" class="corridor"/>
-      <text class="t-corridor" x="175" y="226" text-anchor="middle">— ELEVATORS —</text>
+    <!-- 402 cluster: main room + sub-rooms (far left) -->
+    <rect x="6"  y="6"  width="18" height="52" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="15" y="34" text-anchor="middle">C</text>
+    <rect x="26" y="6"  width="18" height="52" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="35" y="34" text-anchor="middle">D</text>
+    <rect x="46" y="6"  width="52" height="52" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#484848" x="72" y="35" text-anchor="middle">401</text>
+    <rect x="6"  y="62" width="92" height="84" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="9" fill="#555" x="52" y="108" text-anchor="middle">402</text>
+    <!-- 402A/402B bottom sub -->
+    <rect x="6"  y="148" width="44" height="20" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="28" y="162" text-anchor="middle">402B</text>
+    <rect x="52" y="148" width="46" height="20" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="75" y="162" text-anchor="middle">402A</text>
 
-      <!-- Neutral rooms left -->
-      <rect x="8" y="8" width="66" height="56" rx="3" class="room"/>
-      <text class="t-room" x="41" y="38" text-anchor="middle">401</text>
-      <rect x="8" y="70" width="66" height="124" rx="3" class="room"/>
-      <text class="t-room" x="41" y="134" text-anchor="middle">402</text>
+    <!-- Staircase top-left (between 402 and elevator zone) -->
+    <rect x="100" y="120" width="28" height="48" rx="1" fill="url(#st)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="114" y="140" text-anchor="middle">STAIR</text>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="114" y="149" text-anchor="middle">A</text>
 
-      <!-- Neutral rooms right -->
-      <rect x="416" y="8" width="80" height="76" rx="3" class="room"/>
-      <text class="t-room" x="456" y="48" text-anchor="middle">430</text>
-      <rect x="416" y="252" width="64" height="46" rx="3" class="room"/>
-      <text class="t-room" x="448" y="277" text-anchor="middle">433</text>
-      <rect x="416" y="304" width="64" height="44" rx="3" class="room"/>
-      <text class="t-room" x="448" y="328" text-anchor="middle">433B</text>
-      <rect x="416" y="354" width="64" height="38" rx="3" class="room"/>
-      <text class="t-room" x="448" y="375" text-anchor="middle">434</text>
-      <rect x="416" y="398" width="64" height="40" rx="3" class="room"/>
-      <text class="t-room" x="448" y="420" text-anchor="middle">435</text>
+    <!-- 424 LANG — large highlighted, top center -->
+    <rect x="222" y="6" width="192" height="152" rx="3" fill="#1e1200" stroke="#c8820a" stroke-width="2.5"/>
+    <text font-family="'DM Sans',sans-serif" font-size="15" font-weight="500" fill="#f5c842" x="318" y="68" text-anchor="middle">424</text>
+    <text font-family="'DM Sans',sans-serif" font-size="11" fill="#c8820a" x="318" y="88" text-anchor="middle">Lang Auditorium</text>
+    <text font-family="'DM Mono',monospace" font-size="8.5" fill="#8a5808" x="318" y="107" text-anchor="middle">Film Screenings</text>
+    <!-- reception strip below Lang -->
+    <rect x="222" y="158" width="192" height="10" rx="1" fill="rgba(200,130,10,0.2)" stroke="#c8820a" stroke-width="0.8" stroke-dasharray="5 3"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#c8820a" x="318" y="166" text-anchor="middle">← Reception hallway →</text>
 
-      <!-- Center -->
-      <rect x="258" y="252" width="74" height="76" rx="3" class="room"/>
-      <text class="t-room" x="295" y="292" text-anchor="middle">466</text>
-      <rect x="8" y="280" width="90" height="74" rx="3" class="room"/>
-      <text class="t-room" x="53" y="319" text-anchor="middle">482</text>
+    <!-- 425D small room -->
+    <rect x="418" y="100" width="46" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="441" y="126" text-anchor="middle">425D</text>
 
-      <!-- Bottom rows -->
-      <rect x="106" y="360" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="133" y="384" text-anchor="middle">477</text>
-      <rect x="166" y="360" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="193" y="384" text-anchor="middle">475</text>
-      <rect x="226" y="360" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="253" y="384" text-anchor="middle">473</text>
-      <rect x="106" y="410" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="133" y="434" text-anchor="middle">476</text>
-      <rect x="166" y="410" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="193" y="434" text-anchor="middle">474</text>
-      <rect x="226" y="410" width="54" height="44" rx="3" class="room"/>
-      <text class="t-room" x="253" y="434" text-anchor="middle">472</text>
-      <rect x="68" y="410" width="34" height="74" rx="3" class="room"/>
-      <text class="t-room" x="85" y="450" text-anchor="middle">478</text>
-      <rect x="286" y="410" width="80" height="70" rx="3" class="room"/>
-      <text class="t-room" x="326" y="447" text-anchor="middle">470</text>
+    <!-- Staircase top-right (between 424 and 430) -->
+    <rect x="418" y="6"  width="28" height="46" rx="1" fill="url(#st)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="432" y="26" text-anchor="middle">STAIR</text>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="432" y="35" text-anchor="middle">B</text>
 
-      <!-- LANG AUDITORIUM highlighted -->
-      <rect x="106" y="8" width="196" height="148" rx="5" class="lang"/>
-      <text class="t-label" x="204" y="62" text-anchor="middle" fill="#f5c842">424</text>
-      <text class="t-label" x="204" y="80" text-anchor="middle" fill="#e0bd70">Lang Auditorium</text>
-      <text class="t-sub" x="204" y="98" text-anchor="middle" fill="#c8820a">Screenings</text>
+    <!-- 430 top-right -->
+    <rect x="450" y="6"  width="80" height="76" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="9" fill="#555" x="490" y="47" text-anchor="middle">430</text>
 
-      <!-- Reception hallway -->
-      <rect x="106" y="193" width="372" height="12" rx="2" class="reception-band"/>
-      <text class="t-reception" x="292" y="202" text-anchor="middle">Hallway — Reception</text>
+    <!-- 432 far-right tall -->
+    <rect x="534" y="6"  width="80" height="152" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="9" fill="#555" x="574" y="84" text-anchor="middle">432</text>
 
-      <!-- TV STUDIO highlighted -->
-      <rect x="368" y="252" width="44" height="140" rx="5" class="tv-studio"/>
-      <text class="t-label" x="390" y="306" text-anchor="middle" fill="#4dd4a8" font-size="10">436</text>
-      <text class="t-sub" x="390" y="320" text-anchor="middle" fill="#0d8060">TV Studio</text>
-      <text class="t-sub" x="390" y="334" text-anchor="middle" fill="#0d8060">bugs,</text>
-      <text class="t-sub" x="390" y="348" text-anchor="middle" fill="#0d8060">birds,</text>
-      <text class="t-sub" x="390" y="362" text-anchor="middle" fill="#0d8060">blue</text>
+    <!-- ── ELEVATOR BANK — center-left of floor ── -->
+    <rect x="100" y="170" width="316" height="44" fill="#0c0c0c" stroke="#252525" stroke-width="1"/>
+    <!-- X boxes: 8 across -->
+    <rect x="104" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="104" y1="174" x2="138" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="138" y1="174" x2="104" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="142" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="142" y1="174" x2="176" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="176" y1="174" x2="142" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="180" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="180" y1="174" x2="214" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="214" y1="174" x2="180" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="218" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="218" y1="174" x2="252" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="252" y1="174" x2="218" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="256" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="256" y1="174" x2="290" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="290" y1="174" x2="256" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="294" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="294" y1="174" x2="328" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="328" y1="174" x2="294" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="332" y="174" width="34" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="332" y1="174" x2="366" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="366" y1="174" x2="332" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <rect x="370" y="174" width="42" height="36" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="370" y1="174" x2="412" y2="210" stroke="#252525" stroke-width="0.7"/><line x1="412" y1="174" x2="370" y2="210" stroke="#252525" stroke-width="0.7"/>
+    <!-- bracket + ELEVATORS label -->
+    <line x1="104" y1="213" x2="412" y2="213" stroke="#2e2e2e" stroke-width="0.8"/>
+    <line x1="104" y1="210" x2="104" y2="213" stroke="#2e2e2e" stroke-width="0.8"/>
+    <line x1="412" y1="210" x2="412" y2="213" stroke="#2e2e2e" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#3a3a3a" x="258" y="224" text-anchor="middle" letter-spacing="3">ELEVATORS</text>
 
-      <!-- STAIRCASES 4th -->
-      <rect x="302" y="8" width="34" height="44" rx="2" class="stair" fill="url(#hatch4)"/>
-      <text class="t-stair" x="319" y="26" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="319" y="36" text-anchor="middle">A</text>
+    <!-- ── BOTTOM HALF ── -->
 
-      <rect x="88" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch4)"/>
-      <text class="t-stair" x="104" y="220" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="104" y="230" text-anchor="middle">B</text>
+    <!-- Left outer: wall rooms (thin strip matching original left edge) -->
+    <rect x="6" y="172" width="90" height="260" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="51" y="270" text-anchor="middle">left</text>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="51" y="282" text-anchor="middle">offices</text>
 
-      <rect x="310" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch4)"/>
-      <text class="t-stair" x="326" y="220" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="326" y="230" text-anchor="middle">C</text>
+    <!-- 482 large dark block -->
+    <rect x="100" y="230" width="110" height="106" rx="2" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="9" fill="#555" x="155" y="286" text-anchor="middle">482</text>
 
-      <rect x="8" y="360" width="50" height="34" rx="2" class="stair" fill="url(#hatch4)"/>
-      <text class="t-stair" x="33" y="378" text-anchor="middle">STAIR D</text>
+    <!-- Staircase bottom-left area -->
+    <rect x="100" y="340" width="36" height="50" rx="1" fill="url(#st)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="118" y="361" text-anchor="middle">STAIR</text>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="118" y="370" text-anchor="middle">C</text>
 
-      <!-- Callout lines right side -->
-      <line x1="302" y1="82" x2="496" y2="82" class="leader"/>
-      <circle cx="302" cy="82" r="2" class="leader-dot"/>
-      <text x="500" y="78" font-family="'DM Mono',monospace" font-size="9" fill="#c8820a">Screenings</text>
-      <text x="500" y="90" font-family="'DM Mono',monospace" font-size="8" fill="#555">we all still feel…</text>
+    <!-- 477A thin vertical divider -->
+    <rect x="214" y="230" width="20" height="106" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5" fill="#3a3a3a" x="224" y="284" text-anchor="middle" writing-mode="tb" glyph-orientation-vertical="0">477A</text>
 
-      <line x1="478" y1="199" x2="496" y2="199" class="leader"/>
-      <circle cx="478" cy="199" r="2" class="leader-dot"/>
-      <text x="500" y="203" font-family="'DM Mono',monospace" font-size="9" fill="#c8820a">Reception</text>
+    <!-- 477/475/473 top row -->
+    <rect x="238" y="230" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="264" y="256" text-anchor="middle">477</text>
+    <rect x="294" y="230" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="320" y="256" text-anchor="middle">475</text>
+    <rect x="350" y="230" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="376" y="256" text-anchor="middle">473</text>
 
-      <line x1="412" y1="322" x2="496" y2="322" class="leader"/>
-      <circle cx="412" cy="322" r="2" class="leader-dot"/>
-      <text x="500" y="318" font-family="'DM Mono',monospace" font-size="9" fill="#0d8060">bugs, birds, blue</text>
-      <text x="500" y="330" font-family="'DM Mono',monospace" font-size="8" fill="#555">Celeste Newcomb</text>
-    </svg>
+    <!-- 476/474/472 bottom row -->
+    <rect x="238" y="280" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="264" y="306" text-anchor="middle">476</text>
+    <rect x="294" y="280" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="320" y="306" text-anchor="middle">474</text>
+    <rect x="350" y="280" width="52" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#555" x="376" y="306" text-anchor="middle">472</text>
+
+    <!-- 478 / 478B bottom of center-left -->
+    <rect x="140" y="340" width="30" height="92" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="155" y="388" text-anchor="middle">478B</text>
+    <rect x="174" y="340" width="60" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="204" y="366" text-anchor="middle">478</text>
+
+    <!-- 466 center-right -->
+    <rect x="406" y="230" width="70" height="78" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="441" y="272" text-anchor="middle">466</text>
+
+    <!-- 470 below 466 -->
+    <rect x="406" y="312" width="70" height="86" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="441" y="357" text-anchor="middle">470</text>
+
+    <!-- 436 TV STUDIO — highlighted, bottom-right, wide -->
+    <rect x="480" y="230" width="134" height="168" rx="3" fill="#001a10" stroke="#0d8060" stroke-width="2.5"/>
+    <text font-family="'DM Sans',sans-serif" font-size="14" font-weight="500" fill="#4dd4a8" x="547" y="298" text-anchor="middle">436</text>
+    <text font-family="'DM Mono',monospace" font-size="9" fill="#0d8060" x="547" y="315" text-anchor="middle">TV Studio</text>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#0a5040" x="547" y="331" text-anchor="middle">bugs, birds, blue</text>
+
+    <!-- 433/433B/434/435 stack (right of 436 in original — far right) -->
+    <rect x="450" y="170" width="56" height="38" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="6.5" fill="#484848" x="478" y="192" text-anchor="middle">433/433B</text>
+    <rect x="450" y="212" width="26" height="30" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="463" y="230" text-anchor="middle">434</text>
+    <rect x="450" y="246" width="26" height="30" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="463" y="264" text-anchor="middle">435</text>
+
+    <!-- Staircase bottom-right -->
+    <rect x="534" y="170" width="80" height="56" rx="1" fill="url(#st)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#555" x="574" y="196" text-anchor="middle">STAIR D</text>
+  </svg>
   </div>
-
   <div class="events">
-    <div class="event-item amber">
-      <div class="event-dot"></div>
-      <div class="event-info">
-        <div class="event-title">we all still feel the missing being</div>
-        <div class="event-artist">Screenings</div>
-        <div class="event-location">424 Lang Auditorium · Hallway outside = Reception</div>
-      </div>
-    </div>
-    <div class="event-item teal">
-      <div class="event-dot"></div>
-      <div class="event-info">
-        <div class="event-title">bugs, birds, blue</div>
-        <div class="event-artist">Celeste Newcomb · installation</div>
-        <div class="event-location">436 TV Studio</div>
-      </div>
-    </div>
+    <div class="ev am"><div class="dot"></div><div><div class="et">Film Screenings</div><div class="ed">424 Lang Auditorium · hallway outside = reception</div></div></div>
+    <div class="ev te"><div class="dot"></div><div><div class="et">bugs, birds, blue — Celeste Newcomb</div><div class="ed">436 TV Studio</div></div></div>
   </div>
 </section>
 
-<!-- ── 5TH FLOOR ── -->
+<!-- ══════════════════════ 5TH FLOOR ══════════════════════ -->
+<!--
+  Layout key (traced from original):
+  FAR LEFT COLUMN: 502 (top, standalone purple), 503 below it, 503A below that — runs full height
+  TOP SECTION (right of left column): 501E/D/C small rooms top, 501A/B below them, 500 room, 520F/520G small rooms, then LARGE BLANK AREA top-right
+  ELEVATOR BAND: X boxes spanning ~55% width, center
+  SMALL ROOMS flanking elevator: 525 left of center, 528/529 right of center (IN the corridor zone)
+  BOTTOM LEFT: open black hallway — wide empty space between left column and main rooms
+                515 small room sticks into this space mid-left
+                511/512 small rooms below 515
+                508 bottom-left
+  BOTTOM RIGHT: 537 Acting Studio (large, highlighted) center
+                543 Black Box (very large, highlighted) bottom-center, extends to edge
+                544 IMA Grad Lab right side
+  STAIRCASES at corners and flanking corridor
+-->
 <section class="floor-section">
   <div class="floor-label">5th floor</div>
   <div class="map-wrap">
-    <svg viewBox="0 0 580 510" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <pattern id="hatch5" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
-          <line x1="0" y1="5" x2="5" y2="0" class="stair-hatch"/>
-        </pattern>
-      </defs>
+  <svg viewBox="0 0 620 470" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="st2" x="0" y="0" width="5" height="5" patternUnits="userSpaceOnUse">
+        <line x1="0" y1="5" x2="5" y2="0" stroke="#2e2e2e" stroke-width="1"/>
+      </pattern>
+    </defs>
+    <rect width="620" height="470" fill="#000"/>
 
-      <rect x="0" y="0" width="580" height="510" fill="#0d0d0d"/>
+    <!-- ── FAR LEFT COLUMN (502, 503, 503A) ── -->
+    <rect x="6"  y="6"  width="60" height="64" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="36" y="40" text-anchor="middle">502</text>
+    <rect x="6"  y="74" width="60" height="82" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="36" y="117" text-anchor="middle">503</text>
+    <rect x="6"  y="160" width="60" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="36" y="184" text-anchor="middle">503A</text>
+    <!-- Left column continues below corridor -->
+    <rect x="6"  y="252" width="60" height="80" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#484848" x="36" y="295" text-anchor="middle">504</text>
+    <rect x="6"  y="336" width="60" height="62" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#484848" x="36" y="370" text-anchor="middle">506</text>
+    <rect x="6"  y="402" width="60" height="62" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#484848" x="36" y="435" text-anchor="middle">507</text>
 
-      <!-- Elevator corridor -->
-      <rect x="0" y="200" width="480" height="46" class="corridor"/>
-      <text class="t-corridor" x="175" y="226" text-anchor="middle">— ELEVATORS —</text>
+    <!-- ── TOP SECTION (above corridor) ── -->
+    <!-- 501E/D/C vertical stack of small rooms -->
+    <rect x="70" y="6"  width="20" height="54" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="80" y="36" text-anchor="middle" writing-mode="tb">501E</text>
+    <rect x="93" y="6"  width="20" height="54" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="103" y="36" text-anchor="middle" writing-mode="tb">501D</text>
+    <rect x="116" y="6" width="20" height="54" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="126" y="36" text-anchor="middle" writing-mode="tb">501C</text>
 
-      <!-- Neutral rooms left column -->
-      <rect x="8" y="8" width="66" height="54" rx="3" class="room"/>
-      <text class="t-room" x="41" y="37" text-anchor="middle">502</text>
-      <rect x="8" y="68" width="66" height="80" rx="3" class="room"/>
-      <text class="t-room" x="41" y="110" text-anchor="middle">503</text>
-      <rect x="8" y="200" width="66" height="54" rx="3" class="room"/>
-      <text class="t-room" x="41" y="229" text-anchor="middle">504</text>
-      <rect x="8" y="260" width="66" height="54" rx="3" class="room"/>
-      <text class="t-room" x="41" y="289" text-anchor="middle">506</text>
-      <rect x="8" y="320" width="66" height="68" rx="3" class="room"/>
-      <text class="t-room" x="41" y="356" text-anchor="middle">507</text>
+    <!-- Staircase top-left interior -->
+    <rect x="70" y="64" width="30" height="42" rx="1" fill="url(#st2)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="85" y="83" text-anchor="middle">STR</text>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="85" y="92" text-anchor="middle">A</text>
 
-      <!-- Top center rooms -->
-      <rect x="80" y="8" width="120" height="54" rx="3" class="room"/>
-      <text class="t-room" x="140" y="37" text-anchor="middle">500</text>
-      <rect x="80" y="68" width="55" height="48" rx="3" class="room"/>
-      <text class="t-room" x="107" y="94" text-anchor="middle">520</text>
-      <rect x="141" y="68" width="55" height="48" rx="3" class="room"/>
-      <text class="t-room" x="168" y="94" text-anchor="middle">525</text>
-      <rect x="202" y="68" width="48" height="48" rx="3" class="room"/>
-      <text class="t-room" x="226" y="94" text-anchor="middle">528</text>
-      <rect x="256" y="68" width="48" height="48" rx="3" class="room"/>
-      <text class="t-room" x="280" y="94" text-anchor="middle">529</text>
+    <!-- 501A/B -->
+    <rect x="103" y="64" width="20" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="113" y="88" text-anchor="middle" writing-mode="tb">501A</text>
+    <rect x="126" y="64" width="20" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#3a3a3a" x="136" y="88" text-anchor="middle" writing-mode="tb">501B</text>
 
-      <!-- Top right 544 -->
-      <rect x="370" y="8" width="80" height="98" rx="3" class="room"/>
-      <text class="t-room" x="410" y="59" text-anchor="middle">544</text>
+    <!-- 500 room -->
+    <rect x="150" y="64" width="84" height="62" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="192" y="98" text-anchor="middle">500</text>
 
-      <!-- Left mid -->
-      <rect x="80" y="260" width="58" height="44" rx="3" class="room"/>
-      <text class="t-room" x="109" y="284" text-anchor="middle">515</text>
-      <rect x="80" y="310" width="36" height="44" rx="3" class="room"/>
-      <text class="t-room" x="98" y="334" text-anchor="middle">511</text>
-      <rect x="122" y="310" width="36" height="44" rx="3" class="room"/>
-      <text class="t-room" x="140" y="334" text-anchor="middle">512</text>
+    <!-- 520F / 520G -->
+    <rect x="238" y="106" width="36" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#484848" x="256" y="132" text-anchor="middle">520F</text>
+    <rect x="278" y="106" width="36" height="46" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#484848" x="296" y="132" text-anchor="middle">520G</text>
 
-      <!-- ACTING STUDIO highlighted -->
-      <rect x="80" y="122" width="240" height="126" rx="5" class="acting"/>
-      <text class="t-label" x="200" y="170" text-anchor="middle" fill="#b8aaff">537</text>
-      <text class="t-label" x="200" y="188" text-anchor="middle" fill="#a090e8">Acting Studio</text>
-      <text class="t-sub" x="200" y="206" text-anchor="middle" fill="#6b5ce7">Repeater — AK Hansen</text>
+    <!-- Large blank area top-right (open space in original) -->
+    <rect x="390" y="6"  width="114" height="150" rx="1" fill="#141414" stroke="#1e1e1e" stroke-width="0.5"/>
 
-      <!-- BLACK BOX highlighted -->
-      <rect x="164" y="364" width="240" height="136" rx="5" class="blackbox"/>
-      <text class="t-label" x="284" y="414" text-anchor="middle" fill="#f4845a">543</text>
-      <text class="t-label" x="284" y="432" text-anchor="middle" fill="#e0704a">Black Box</text>
-      <text class="t-sub" x="284" y="450" text-anchor="middle" fill="#c44022">Visual Memoir</text>
-      <text class="t-sub" x="284" y="464" text-anchor="middle" fill="#c44022">Carlos Morales</text>
+    <!-- Staircase top-right -->
+    <rect x="508" y="6"  width="106" height="60" rx="1" fill="url(#st2)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#555" x="561" y="40" text-anchor="middle">STAIR B</text>
 
-      <!-- STAIRCASES 5th -->
-      <rect x="302" y="8" width="34" height="44" rx="2" class="stair" fill="url(#hatch5)"/>
-      <text class="t-stair" x="319" y="26" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="319" y="36" text-anchor="middle">A</text>
+    <!-- ── ELEVATOR BAND ── -->
+    <rect x="70" y="206" width="330" height="42" fill="#0c0c0c" stroke="#252525" stroke-width="1"/>
+    <!-- X boxes: 8 across -->
+    <rect x="74"  y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="74"  y1="210" x2="108" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="108" y1="210" x2="74"  y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="112" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="112" y1="210" x2="146" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="146" y1="210" x2="112" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="150" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="150" y1="210" x2="184" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="184" y1="210" x2="150" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="188" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="188" y1="210" x2="222" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="222" y1="210" x2="188" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="226" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="226" y1="210" x2="260" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="260" y1="210" x2="226" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="264" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="264" y1="210" x2="298" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="298" y1="210" x2="264" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="302" y="210" width="34" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="302" y1="210" x2="336" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="336" y1="210" x2="302" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <rect x="340" y="210" width="56" height="34" fill="#0a0a0a" stroke="#222" stroke-width="0.5"/>
+    <line x1="340" y1="210" x2="396" y2="244" stroke="#242424" stroke-width="0.7"/><line x1="396" y1="210" x2="340" y2="244" stroke="#242424" stroke-width="0.7"/>
+    <!-- bracket + label -->
+    <line x1="74" y1="247" x2="396" y2="247" stroke="#2e2e2e" stroke-width="0.8"/>
+    <line x1="74"  y1="244" x2="74"  y2="247" stroke="#2e2e2e" stroke-width="0.8"/>
+    <line x1="396" y1="244" x2="396" y2="247" stroke="#2e2e2e" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="7.5" fill="#3a3a3a" x="235" y="258" text-anchor="middle" letter-spacing="3">ELEVATORS</text>
 
-      <rect x="88" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch5)"/>
-      <text class="t-stair" x="104" y="220" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="104" y="230" text-anchor="middle">B</text>
+    <!-- Small rooms in corridor zone: 525, 528, 529 -->
+    <rect x="238" y="160" width="36" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#555" x="256" y="184" text-anchor="middle">525</text>
+    <rect x="390" y="160" width="34" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#555" x="407" y="184" text-anchor="middle">528</text>
+    <rect x="428" y="160" width="34" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#555" x="445" y="184" text-anchor="middle">529</text>
 
-      <rect x="310" y="200" width="32" height="46" rx="2" class="stair" fill="url(#hatch5)"/>
-      <text class="t-stair" x="326" y="220" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="326" y="230" text-anchor="middle">C</text>
+    <!-- ── BOTTOM HALF ── -->
+    <!-- Open hallway (black space left side — this is intentionally empty) -->
 
-      <rect x="8" y="394" width="50" height="34" rx="2" class="stair" fill="url(#hatch5)"/>
-      <text class="t-stair" x="33" y="413" text-anchor="middle">STAIR D</text>
+    <!-- 515 small room poking into hallway -->
+    <rect x="70"  y="310" width="68" height="38" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="104" y="332" text-anchor="middle">515</text>
 
-      <rect x="456" y="360" width="44" height="50" rx="2" class="stair" fill="url(#hatch5)"/>
-      <text class="t-stair" x="478" y="380" text-anchor="middle">STAIR</text>
-      <text class="t-stair" x="478" y="390" text-anchor="middle">E</text>
+    <!-- 511 / 512 small rooms below 515 -->
+    <rect x="70"  y="354" width="32" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="86" y="378" text-anchor="middle">511</text>
+    <rect x="106" y="354" width="32" height="42" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="7" fill="#484848" x="122" y="378" text-anchor="middle">512</text>
 
-      <!-- Callout lines -->
-      <line x1="320" y1="172" x2="496" y2="172" class="leader"/>
-      <circle cx="320" cy="172" r="2" class="leader-dot"/>
-      <text x="500" y="168" font-family="'DM Mono',monospace" font-size="9" fill="#6b5ce7">Repeater</text>
-      <text x="500" y="180" font-family="'DM Mono',monospace" font-size="8" fill="#555">AK Hansen</text>
+    <!-- 508 bottom-left -->
+    <rect x="70"  y="430" width="30" height="34" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="6.5" fill="#484848" x="85" y="450" text-anchor="middle">508</text>
 
-      <line x1="404" y1="432" x2="496" y2="432" class="leader"/>
-      <circle cx="404" cy="432" r="2" class="leader-dot"/>
-      <text x="500" y="428" font-family="'DM Mono',monospace" font-size="9" fill="#c44022">Visual Memoir</text>
-      <text x="500" y="440" font-family="'DM Mono',monospace" font-size="8" fill="#555">Carlos Morales</text>
-    </svg>
+    <!-- Staircase bottom-left -->
+    <rect x="6" y="430" width="60" height="34" rx="1" fill="url(#st2)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="5.5" fill="#555" x="36" y="450" text-anchor="middle">STAIR C</text>
+
+    <!-- 537 ACTING STUDIO — highlighted, center below corridor -->
+    <rect x="144" y="268" width="240" height="118" rx="3" fill="#130f38" stroke="#6b5ce7" stroke-width="2.5"/>
+    <text font-family="'DM Sans',sans-serif" font-size="14" font-weight="500" fill="#b8aaff" x="264" y="320" text-anchor="middle">537</text>
+    <text font-family="'DM Sans',sans-serif" font-size="10" fill="#8878d0" x="264" y="337" text-anchor="middle">Acting Studio</text>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#5a4cc0" x="264" y="353" text-anchor="middle">Repeater — AK Hansen</text>
+
+    <!-- 543 BLACK BOX — very large, bottom center, highlighted -->
+    <rect x="144" y="392" width="310" height="72" rx="3" fill="#1a0800" stroke="#c44022" stroke-width="2.5"/>
+    <text font-family="'DM Sans',sans-serif" font-size="14" font-weight="500" fill="#f4845a" x="299" y="426" text-anchor="middle">543  Black Box</text>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#c44022" x="299" y="443" text-anchor="middle">Visual Memoir — Carlos Morales</text>
+
+    <!-- 544 IMA Grad Lab — right side below corridor -->
+    <rect x="390" y="268" width="118" height="120" rx="1" fill="#1f1f1f" stroke="#2e2e2e" stroke-width="0.6"/>
+    <text font-family="'DM Mono',monospace" font-size="8" fill="#555" x="449" y="332" text-anchor="middle">544</text>
+
+    <!-- Staircase bottom-right -->
+    <rect x="512" y="268" width="102" height="60" rx="1" fill="url(#st2)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#555" x="563" y="300" text-anchor="middle">STAIR D</text>
+
+    <!-- Staircase right side mid -->
+    <rect x="512" y="392" width="102" height="72" rx="1" fill="url(#st2)" stroke="#383838" stroke-width="0.8"/>
+    <text font-family="'DM Mono',monospace" font-size="6" fill="#555" x="563" y="430" text-anchor="middle">STAIR E</text>
+  </svg>
   </div>
-
   <div class="events">
-    <div class="event-item purple">
-      <div class="event-dot"></div>
-      <div class="event-info">
-        <div class="event-title">Repeater</div>
-        <div class="event-artist">AK Hansen · installation</div>
-        <div class="event-location">537 Acting Studio, Hunter North</div>
-      </div>
-    </div>
-    <div class="event-item coral">
-      <div class="event-dot"></div>
-      <div class="event-info">
-        <div class="event-title">Visual Memoir</div>
-        <div class="event-artist">Carlos Morales · installation</div>
-        <div class="event-location">543 Black Box, Hunter North</div>
-      </div>
-    </div>
+    <div class="ev pu"><div class="dot"></div><div><div class="et">Repeater — AK Hansen</div><div class="ed">537 Acting Studio</div></div></div>
+    <div class="ev co"><div class="dot"></div><div><div class="et">Visual Memoir — Carlos Morales</div><div class="ed">543 Black Box</div></div></div>
   </div>
 </section>
 
 <!-- LEGEND -->
 <div class="legend">
-  <div class="legend-item">
-    <div class="legend-swatch" style="background:#3a2800;border:1.5px solid #c8820a;"></div>
-    Screenings / Reception
-  </div>
-  <div class="legend-item">
-    <div class="legend-swatch" style="background:#002820;border:1.5px solid #0d8060;"></div>
-    bugs, birds, blue
-  </div>
-  <div class="legend-item">
-    <div class="legend-swatch" style="background:#1a1530;border:1.5px solid #6b5ce7;"></div>
-    Repeater
-  </div>
-  <div class="legend-item">
-    <div class="legend-swatch" style="background:#2a0e08;border:1.5px solid #c44022;"></div>
-    Visual Memoir
-  </div>
-  <div class="legend-item">
-    <div class="legend-stair"></div>
-    Staircase
-  </div>
+  <div class="li"><div class="ls" style="background:#1e1200;border:1.5px solid #c8820a;"></div>424 Lang — Screenings</div>
+  <div class="li"><div class="ls" style="background:#001a10;border:1.5px solid #0d8060;"></div>436 TV Studio — bugs, birds, blue</div>
+  <div class="li"><div class="ls" style="background:#130f38;border:1.5px solid #6b5ce7;"></div>537 Acting Studio — Repeater</div>
+  <div class="li"><div class="ls" style="background:#1a0800;border:1.5px solid #c44022;"></div>543 Black Box — Visual Memoir</div>
+  <div class="li"><div class="ls-st"></div>Staircase</div>
 </div>
 
 </body>
